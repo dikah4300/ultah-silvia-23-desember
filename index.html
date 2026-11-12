@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selamat Ulang Tahun Silvia! 23 Desember</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <header class="hero-header">
+      <div class="badge-date">23 Desember Special Day</div>
+      <h1 class="main-title">Selamat Ulang Tahun, <span class="highlight-name">Silvia!</span></h1>
+      <p class="subtitle">Hari ini resmi nambah umur, tapi tenang aja: pesona, kebaikan, dan kadar lucunya juga ikut nambah 100 persen!</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Section Kue Ulang Tahun Interaktif -->
+      <section class="cake-card" aria-label="Kue Ulang Tahun">
+        <h2 class="section-title">Kue Ulang Tahun Spesial</h2>
+        <p class="card-instruction">Buat permohonan manis dalam hati, lalu klik tombol di bawah untuk tiup lilinnya!</p>
+        
+        <div class="cake-container" id="cakeStage">
+          <div class="cake">
+            <div class="candle">
+              <div class="flame" id="flame"></div>
+            </div>
+            <div class="tier tier-top"></div>
+            <div class="tier tier-middle"></div>
+            <div class="tier tier-bottom"></div>
+          </div>
+        </div>
+
+        <div class="cake-actions">
+          <button type="button" class="btn-primary" id="btnBlowCandle">
+            <span class="btn-text">Tiup Lilinnya!</span>
+          </button>
+          <button type="button" class="btn-secondary" id="btnPlaySong">
+            <span class="btn-icon">&#9835;</span>
+            <span class="btn-text" id="songBtnText">Putar Melodi Ultah</span>
+          </button>
+        </div>
+        <p class="wish-status" id="wishStatus">Lilin masih menyala terang menunggu doa terbaikmu.</p>
+      </section>
+
+      <!-- Section Kotak Hadiah Kejutan -->
+      <section class="gift-section" aria-label="Kotak Kado Kejutan">
+        <h2 class="section-title">Ada Paket Kejutan Nih!</h2>
+        <p class="card-instruction">Kira-kira apa ya isinya? Jangan dikocok-kocok, langsung buka aja.</p>
+        
+        <div class="gift-box-wrap">
+          <button type="button" class="gift-box-btn" id="btnOpenGift" aria-label="Buka kotak kado">
+            <div class="gift-lid" id="giftLid"></div>
+            <div class="gift-body"></div>
+            <div class="gift-ribbon"></div>
+          </button>
+        </div>
+
+        <div class="secret-card hidden" id="secretCard" aria-live="polite">
+          <h3 class="secret-title">Surat Rahasia Buat Silvia:</h3>
+          <p class="secret-text">
+            "Selamat tanggal 23 Desember! Doaku sederhana tapi tulus: semoga hari-harimu selalu dikelilingi tawa, makanan enak yang nggak bikin gendut, rezeki lancar tanpa drama, dan semoga segala hal baik yang kamu semogakan segera terwujud satu per satu. Jangan lupa senyum hari ini, karena senyummu itu menular banget!"
+          </p>
+        </div>
+      </section>
+
+      <!-- Section Ucapan Lucu & Manis (Fun Cards) -->
+      <section class="fun-wishes-section" aria-label="Kartu Ucapan Lucu dan Manis">
+        <h2 class="section-title">3 Fakta Tak Terbantahkan Hari Ini</h2>
+        <div class="cards-grid">
+          <article class="wish-card">
+            <div class="card-number">01</div>
+            <h3 class="card-heading">Kadar Manis Maksimal</h3>
+            <p class="card-desc">Secara resmi dinobatkan sebagai orang paling manis se-lingkup pertemanan hari ini. Hati-hati dikerubungi semut ya Sil!</p>
+          </article>
+
+          <article class="wish-card">
+            <div class="card-number">02</div>
+            <h3 class="card-heading">Lisensi Makan Enak</h3>
+            <p class="card-desc">Hari ini kalori libur beroperasi. Apapun yang dimakan, statusnya otomatis halal, enak, dan membahagiakan jiwa raga.</p>
+          </article>
+
+          <article class="wish-card">
+            <div class="card-number">03</div>
+            <h3 class="card-heading">Doa Tanpa Akhir</h3>
+            <p class="card-desc">Semoga langkah ke depan selalu dipenuhi kemudahan, kebahagiaan sejati, dan orang-orang baik yang tulus sayang sama kamu.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <p class="footer-note">Dibuat khusus penuh doa dan ketulusan untuk Silvia di tanggal 23 Desember.</p>
+    </footer>
+  </div>
+
+  <!-- Canvas Konfeti -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>
