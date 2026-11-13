@@ -377,34 +377,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }, totalDuration);
   });
 
-  // Music Player: Stop the Wedding
-  const btnPlayWeddingSong = document.getElementById("btnPlayWeddingSong");
-  const audioWeddingSong = document.getElementById("audioWeddingSong");
-  const weddingSongIcon = document.getElementById("weddingSongIcon");
-  const weddingSongText = document.getElementById("weddingSongText");
+  // Music Player: Shake It Off (Taylor Swift)
+  const btnPlaySpecialSong = document.getElementById("btnPlaySpecialSong");
+  const audioSpecialSong = document.getElementById("audioSpecialSong");
+  const specialSongIcon = document.getElementById("specialSongIcon");
+  const specialSongText = document.getElementById("specialSongText");
 
-  if (btnPlayWeddingSong && audioWeddingSong) {
-    btnPlayWeddingSong.addEventListener("click", () => {
-      if (audioWeddingSong.paused) {
-        audioWeddingSong.play().then(() => {
-          btnPlayWeddingSong.classList.add("playing");
-          weddingSongIcon.innerHTML = "&#10074;&#10074;"; // Pause icon
-          weddingSongText.textContent = "Pause Lagu: Stop the Wedding";
+  if (btnPlaySpecialSong && audioSpecialSong) {
+    btnPlaySpecialSong.addEventListener("click", () => {
+      if (audioSpecialSong.paused) {
+        audioSpecialSong.play().then(() => {
+          btnPlaySpecialSong.classList.add("playing");
+          specialSongIcon.innerHTML = "&#10074;&#10074;"; // Pause icon
+          specialSongText.textContent = "Pause Lagu: Shake It Off";
         }).catch((err) => {
           console.error("Audio playback error:", err);
         });
       } else {
-        audioWeddingSong.pause();
-        btnPlayWeddingSong.classList.remove("playing");
-        weddingSongIcon.innerHTML = "&#9658;"; // Play icon
-        weddingSongText.textContent = "Putar Lagu: Stop the Wedding";
+        audioSpecialSong.pause();
+        btnPlaySpecialSong.classList.remove("playing");
+        specialSongIcon.innerHTML = "&#9658;"; // Play icon
+        specialSongText.textContent = "Putar Lagu: Shake It Off (Taylor Swift)";
       }
     });
 
-    audioWeddingSong.addEventListener("ended", () => {
-      btnPlayWeddingSong.classList.remove("playing");
-      weddingSongIcon.innerHTML = "&#9658;";
-      weddingSongText.textContent = "Putar Lagu: Stop the Wedding";
+    audioSpecialSong.addEventListener("ended", () => {
+      btnPlaySpecialSong.classList.remove("playing");
+      specialSongIcon.innerHTML = "&#9658;";
+      specialSongText.textContent = "Putar Lagu: Shake It Off (Taylor Swift)";
     });
   }
 });
