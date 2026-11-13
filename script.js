@@ -271,4 +271,35 @@ document.addEventListener("DOMContentLoaded", () => {
       btnPlaySong.disabled = false;
     }, totalDuration);
   });
+
+  // Music Player: Stop the Wedding
+  const btnPlayWeddingSong = document.getElementById("btnPlayWeddingSong");
+  const audioWeddingSong = document.getElementById("audioWeddingSong");
+  const weddingSongIcon = document.getElementById("weddingSongIcon");
+  const weddingSongText = document.getElementById("weddingSongText");
+
+  if (btnPlayWeddingSong && audioWeddingSong) {
+    btnPlayWeddingSong.addEventListener("click", () => {
+      if (audioWeddingSong.paused) {
+        audioWeddingSong.play().then(() => {
+          btnPlayWeddingSong.classList.add("playing");
+          weddingSongIcon.innerHTML = "&#10074;&#10074;"; // Pause icon
+          weddingSongText.textContent = "Pause Lagu: Stop the Wedding";
+        }).catch((err) => {
+          console.error("Audio playback error:", err);
+        });
+      } else {
+        audioWeddingSong.pause();
+        btnPlayWeddingSong.classList.remove("playing");
+        weddingSongIcon.innerHTML = "&#9658;"; // Play icon
+        weddingSongText.textContent = "Putar Lagu: Stop the Wedding";
+      }
+    });
+
+    audioWeddingSong.addEventListener("ended", () => {
+      btnPlayWeddingSong.classList.remove("playing");
+      weddingSongIcon.innerHTML = "&#9658;";
+      weddingSongText.textContent = "Putar Lagu: Stop the Wedding";
+    });
+  }
 });
