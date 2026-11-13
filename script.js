@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnBlowCandle.addEventListener("click", () => {
     if (!isCandleBlown) {
       flame.classList.add("extinguished");
-      wishStatus.textContent = "Yay, lilinnya padam! Semoga semua permohonan baik Silvia di tanggal 23 Desember terkabul!";
+      wishStatus.textContent = "Yay, lilinnya padam! Semoga semua permohonan baik Silvia di usia ke-24 terkabul!";
       btnBlowCandle.querySelector(".btn-text").textContent = "Nyalakan Lilin Lagi";
       isCandleBlown = true;
       launchConfetti(90);
