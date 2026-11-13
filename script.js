@@ -379,15 +379,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Music Player: Shake It Off (Taylor Swift)
   const btnPlaySpecialSong = document.getElementById("btnPlaySpecialSong");
-  const audioSpecialSong = document.getElementById("audioSpecialSong");
   const specialSongIcon = document.getElementById("specialSongIcon");
   const specialSongText = document.getElementById("specialSongText");
+  // Buat Audio object via JS (lebih reliable daripada <audio> element)
+  const audioSpecialSong = new Audio("shake_it_off.mp3");
+  audioSpecialSong.preload = "auto";
 
-  if (btnPlaySpecialSong && audioSpecialSong) {
-    // Pre-load audio saat halaman dimuat
-    audioSpecialSong.src = "shake_it_off.mp3";
-    audioSpecialSong.load();
-
+  if (btnPlaySpecialSong) {
     btnPlaySpecialSong.addEventListener("click", () => {
       // Hentikan melodi synthesizer ultah jika sedang berbunyi
       if (audioCtx && audioCtx.state === "running") {
@@ -398,7 +396,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (audioSpecialSong.paused) {
-        // Langsung play di dalam user gesture handler
         audioSpecialSong.play()
           .then(() => {
             btnPlaySpecialSong.classList.add("playing");
@@ -406,8 +403,6 @@ document.addEventListener("DOMContentLoaded", () => {
             specialSongText.textContent = "Pause Lagu: Shake It Off";
           })
           .catch(() => {
-            // Jika gagal, paksa reload src lalu play
-            audioSpecialSong.src = "shake_it_off.mp3";
             audioSpecialSong.load();
             audioSpecialSong.play()
               .then(() => {
