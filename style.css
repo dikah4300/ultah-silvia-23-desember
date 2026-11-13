@@ -293,10 +293,19 @@ button:focus-visible {
   transform: translateY(-1px);
 }
 
-.music-player-wrap {
-  margin-top: 14px;
-  margin-bottom: 8px;
+/* Group Tombol Musik Vertikal */
+.music-controls-group {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 340px;
+  margin: 0 auto 18px;
+  width: 100%;
+}
+
+.btn-full-music {
+  width: 100%;
   justify-content: center;
 }
 
@@ -304,9 +313,9 @@ button:focus-visible {
   background: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(168, 85, 247, 0.25));
   border: 1px solid rgba(244, 63, 94, 0.4);
   color: #fde68a;
-  padding: 10px 22px;
-  border-radius: 9999px;
-  font-size: 0.92rem;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 0.95rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -528,6 +537,9 @@ button:focus-visible {
     width: 100%;
   }
   .cake-actions button {
+    width: 100%;
+  }
+  .music-controls-group {
     width: 100%;
   }
 }
