@@ -11,19 +11,77 @@ document.addEventListener("DOMContentLoaded", () => {
   const giftLid = document.getElementById("giftLid");
   const secretCard = document.getElementById("secretCard");
   const canvas = document.getElementById("confettiCanvas");
+  const galaxyCanvas = document.getElementById("galaxyCanvas");
 
   let isCandleBlown = false;
   let isGiftOpen = false;
   let isPlayingSong = false;
   let audioCtx = null;
 
-  // Initialize Canvas Size
-  function resizeCanvas() {
+  // Starfield & Cosmic Dust Generator
+  const stars = [];
+  const starCount = 150;
+  let galaxyCtx = galaxyCanvas ? galaxyCanvas.getContext("2d") : null;
+
+  function resizeAllCanvases() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    if (galaxyCanvas) {
+      galaxyCanvas.width = window.innerWidth;
+      galaxyCanvas.height = window.innerHeight;
+      initStars();
+    }
   }
-  window.addEventListener("resize", resizeCanvas);
-  resizeCanvas();
+
+  function initStars() {
+    stars.length = 0;
+    const w = galaxyCanvas.width;
+    const h = galaxyCanvas.height;
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        radius: Math.random() * 1.6 + 0.4,
+        alpha: Math.random() * 0.8 + 0.2,
+        deltaAlpha: (Math.random() * 0.02 + 0.005) * (Math.random() < 0.5 ? 1 : -1),
+        speedY: Math.random() * 0.15 + 0.05,
+        color: Math.random() < 0.25 ? "#fbbf24" : (Math.random() < 0.5 ? "#f43f5e" : "#ffffff")
+      });
+    }
+  }
+
+  function renderStars() {
+    if (!galaxyCtx) return;
+    galaxyCtx.clearRect(0, 0, galaxyCanvas.width, galaxyCanvas.height);
+
+    for (let i = 0; i < stars.length; i++) {
+      const s = stars[i];
+      s.alpha += s.deltaAlpha;
+      if (s.alpha > 0.95 || s.alpha < 0.15) {
+        s.deltaAlpha = -s.deltaAlpha;
+      }
+      s.y -= s.speedY;
+      if (s.y < 0) {
+        s.y = galaxyCanvas.height;
+        s.x = Math.random() * galaxyCanvas.width;
+      }
+
+      galaxyCtx.beginPath();
+      galaxyCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+      galaxyCtx.fillStyle = s.color;
+      galaxyCtx.globalAlpha = Math.max(0.1, Math.min(1, s.alpha));
+      galaxyCtx.shadowBlur = s.radius * 3;
+      galaxyCtx.shadowColor = s.color;
+      galaxyCtx.fill();
+    }
+    requestAnimationFrame(renderStars);
+  }
+
+  window.addEventListener("resize", resizeAllCanvases);
+  resizeAllCanvases();
+  if (galaxyCanvas) {
+    requestAnimationFrame(renderStars);
+  }
 
   // Confetti Particle System
   const particles = [];
