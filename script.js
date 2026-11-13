@@ -18,9 +18,18 @@ document.addEventListener("DOMContentLoaded", () => {
   let isPlayingSong = false;
   let audioCtx = null;
 
-  // Starfield & Cosmic Dust Generator
+  // Botanical Blooming Garden & Cosmic Starfield Canvas
   const stars = [];
-  const starCount = 150;
+  const starCount = 110;
+  const flowers = [];
+  const flowerCount = 26;
+  const flowerColors = [
+    { petal: "rgba(255, 182, 193, ", center: "#fef08a" }, // Sakura Pink
+    { petal: "rgba(244, 114, 182, ", center: "#fde047" }, // Soft Rose
+    { petal: "rgba(251, 146, 60, ", center: "#fef9c3" },  // Peach Blossom
+    { petal: "rgba(216, 180, 254, ", center: "#fef08a" }, // Lavender Bloom
+    { petal: "rgba(253, 164, 175, ", center: "#fbbf24" }  // Baby Pink
+  ];
   let galaxyCtx = galaxyCanvas ? galaxyCanvas.getContext("2d") : null;
 
   function resizeAllCanvases() {
@@ -29,31 +38,109 @@ document.addEventListener("DOMContentLoaded", () => {
     if (galaxyCanvas) {
       galaxyCanvas.width = window.innerWidth;
       galaxyCanvas.height = window.innerHeight;
-      initStars();
+      initBackgroundElements();
     }
   }
 
-  function initStars() {
+  function initBackgroundElements() {
     stars.length = 0;
+    flowers.length = 0;
     const w = galaxyCanvas.width;
     const h = galaxyCanvas.height;
+
+    // Stars & Fairy Dust
     for (let i = 0; i < starCount; i++) {
       stars.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        radius: Math.random() * 1.6 + 0.4,
+        radius: Math.random() * 1.5 + 0.4,
         alpha: Math.random() * 0.8 + 0.2,
         deltaAlpha: (Math.random() * 0.02 + 0.005) * (Math.random() < 0.5 ? 1 : -1),
-        speedY: Math.random() * 0.15 + 0.05,
-        color: Math.random() < 0.25 ? "#fbbf24" : (Math.random() < 0.5 ? "#f43f5e" : "#ffffff")
+        speedY: Math.random() * 0.15 + 0.04,
+        color: Math.random() < 0.3 ? "#fbbf24" : (Math.random() < 0.6 ? "#fda4af" : "#ffffff")
+      });
+    }
+
+    // Hand-drawn Blooming Flowers
+    for (let i = 0; i < flowerCount; i++) {
+      flowers.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        size: Math.random() * 22 + 18,
+        petals: Math.random() < 0.5 ? 5 : 6,
+        colorScheme: flowerColors[Math.floor(Math.random() * flowerColors.length)],
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.004,
+        bloomProgress: Math.random() * 0.8 + 0.2, // Growth / bloom pulsation
+        bloomSpeed: Math.random() * 0.005 + 0.003,
+        swayAngle: Math.random() * Math.PI * 2,
+        swaySpeed: Math.random() * 0.01 + 0.005,
+        speedY: Math.random() * 0.2 + 0.08
       });
     }
   }
 
-  function renderStars() {
+  function drawBloomingFlower(ctx, f) {
+    ctx.save();
+    ctx.translate(f.x, f.y);
+    ctx.rotate(f.rotation);
+
+    // Blooming animation scale
+    const currentScale = 0.85 + Math.sin(f.bloomProgress) * 0.2;
+    const alphaPetal = 0.55 + Math.sin(f.bloomProgress) * 0.15;
+    const petalLen = f.size * currentScale;
+    const petalWid = petalLen * 0.48;
+
+    // Draw Petals
+    const step = (Math.PI * 2) / f.petals;
+    for (let i = 0; i < f.petals; i++) {
+      const angle = i * step;
+      ctx.save();
+      ctx.rotate(angle);
+
+      // Organic curved petal
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-petalWid, -petalLen * 0.45, -petalWid * 0.8, -petalLen, 0, -petalLen);
+      ctx.bezierCurveTo(petalWid * 0.8, -petalLen, petalWid, -petalLen * 0.45, 0, 0);
+
+      ctx.fillStyle = f.colorScheme.petal + alphaPetal + ")";
+      ctx.fill();
+
+      // Hand-drawn style soft outline
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // Flower Center Stamen
+    ctx.beginPath();
+    ctx.arc(0, 0, petalLen * 0.22, 0, Math.PI * 2);
+    ctx.fillStyle = f.colorScheme.center;
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = "#fde047";
+    ctx.fill();
+
+    // Center decorative dots
+    ctx.fillStyle = "rgba(180, 83, 9, 0.6)";
+    for (let d = 0; d < 4; d++) {
+      const dotA = (d * Math.PI) / 2;
+      const dotR = petalLen * 0.1;
+      ctx.beginPath();
+      ctx.arc(Math.cos(dotA) * dotR, Math.sin(dotA) * dotR, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function renderCosmicGarden() {
     if (!galaxyCtx) return;
     galaxyCtx.clearRect(0, 0, galaxyCanvas.width, galaxyCanvas.height);
 
+    // 1. Render Stars
     for (let i = 0; i < stars.length; i++) {
       const s = stars[i];
       s.alpha += s.deltaAlpha;
@@ -74,13 +161,31 @@ document.addEventListener("DOMContentLoaded", () => {
       galaxyCtx.shadowColor = s.color;
       galaxyCtx.fill();
     }
-    requestAnimationFrame(renderStars);
+
+    // 2. Render Blooming Flowers
+    for (let i = 0; i < flowers.length; i++) {
+      const f = flowers[i];
+      f.bloomProgress += f.bloomSpeed;
+      f.rotation += f.rotSpeed;
+      f.swayAngle += f.swaySpeed;
+      f.x += Math.sin(f.swayAngle) * 0.35;
+      f.y -= f.speedY;
+
+      if (f.y < -50) {
+        f.y = galaxyCanvas.height + 40;
+        f.x = Math.random() * galaxyCanvas.width;
+      }
+
+      drawBloomingFlower(galaxyCtx, f);
+    }
+
+    requestAnimationFrame(renderCosmicGarden);
   }
 
   window.addEventListener("resize", resizeAllCanvases);
   resizeAllCanvases();
   if (galaxyCanvas) {
-    requestAnimationFrame(renderStars);
+    requestAnimationFrame(renderCosmicGarden);
   }
 
   // Confetti Particle System
