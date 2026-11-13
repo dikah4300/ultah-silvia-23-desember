@@ -382,8 +382,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const audioSpecialSong = document.getElementById("audioSpecialSong");
   const specialSongIcon = document.getElementById("specialSongIcon");
   const specialSongText = document.getElementById("specialSongText");
+  let specialSongReady = false;
 
   if (btnPlaySpecialSong && audioSpecialSong) {
+    // Pastikan audio siap diputar
+    function ensureAudioLoaded(callback) {
+      if (audioSpecialSong.readyState >= 2) {
+        callback();
+        return;
+      }
+      // Set src langsung jika belum ada
+      if (!audioSpecialSong.currentSrc) {
+        audioSpecialSong.src = "shake_it_off.mp3";
+      }
+      specialSongText.textContent = "Memuat lagu...";
+      audioSpecialSong.load();
+      audioSpecialSong.addEventListener("canplay", function handler() {
+        audioSpecialSong.removeEventListener("canplay", handler);
+        specialSongReady = true;
+        callback();
+      });
+      audioSpecialSong.addEventListener("error", function handler() {
+        audioSpecialSong.removeEventListener("error", handler);
+        specialSongText.textContent = "Gagal memuat, coba lagi";
+      });
+    }
+
     btnPlaySpecialSong.addEventListener("click", () => {
       // Hentikan melodi synthesizer ultah jika sedang berbunyi
       if (audioCtx && audioCtx.state === "running") {
@@ -394,36 +418,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (audioSpecialSong.paused) {
-        // Reset src jika belum termuat sempurna
-        if (!audioSpecialSong.src && !audioSpecialSong.currentSrc) {
-          audioSpecialSong.src = "shake_it_off.mp3";
-        }
-
-        const playPromise = audioSpecialSong.play();
-        if (playPromise !== undefined) {
-          playPromise
+        ensureAudioLoaded(() => {
+          audioSpecialSong.play()
             .then(() => {
               btnPlaySpecialSong.classList.add("playing");
-              specialSongIcon.innerHTML = "&#10074;&#10074;"; // Pause icon
+              specialSongIcon.innerHTML = "&#10074;&#10074;";
               specialSongText.textContent = "Pause Lagu: Shake It Off";
             })
-            .catch((err) => {
-              console.warn("Autoplay/play prevented:", err);
-              // Fallback langsung load ulang lalu play
-              audioSpecialSong.load();
-              audioSpecialSong.play().then(() => {
-                btnPlaySpecialSong.classList.add("playing");
-                specialSongIcon.innerHTML = "&#10074;&#10074;";
-                specialSongText.textContent = "Pause Lagu: Shake It Off";
-              }).catch((e) => {
-                alert("Klik sekali lagi untuk memutar lagu ya!");
-              });
+            .catch(() => {
+              specialSongText.textContent = "Klik sekali lagi untuk putar";
             });
-        }
+        });
       } else {
         audioSpecialSong.pause();
         btnPlaySpecialSong.classList.remove("playing");
-        specialSongIcon.innerHTML = "&#9658;"; // Play icon
+        specialSongIcon.innerHTML = "&#9658;";
         specialSongText.textContent = "Putar Lagu: Shake It Off (Taylor Swift)";
       }
     });
@@ -432,10 +441,6 @@ document.addEventListener("DOMContentLoaded", () => {
       btnPlaySpecialSong.classList.remove("playing");
       specialSongIcon.innerHTML = "&#9658;";
       specialSongText.textContent = "Putar Lagu: Shake It Off (Taylor Swift)";
-    });
-
-    audioSpecialSong.addEventListener("error", (e) => {
-      console.error("Audio element error:", audioSpecialSong.error);
     });
   }
 });
