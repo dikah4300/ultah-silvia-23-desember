@@ -382,31 +382,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const audioSpecialSong = document.getElementById("audioSpecialSong");
   const specialSongIcon = document.getElementById("specialSongIcon");
   const specialSongText = document.getElementById("specialSongText");
-  let specialSongReady = false;
 
   if (btnPlaySpecialSong && audioSpecialSong) {
-    // Pastikan audio siap diputar
-    function ensureAudioLoaded(callback) {
-      if (audioSpecialSong.readyState >= 2) {
-        callback();
-        return;
-      }
-      // Set src langsung jika belum ada
-      if (!audioSpecialSong.currentSrc) {
-        audioSpecialSong.src = "shake_it_off.mp3";
-      }
-      specialSongText.textContent = "Memuat lagu...";
-      audioSpecialSong.load();
-      audioSpecialSong.addEventListener("canplay", function handler() {
-        audioSpecialSong.removeEventListener("canplay", handler);
-        specialSongReady = true;
-        callback();
-      });
-      audioSpecialSong.addEventListener("error", function handler() {
-        audioSpecialSong.removeEventListener("error", handler);
-        specialSongText.textContent = "Gagal memuat, coba lagi";
-      });
-    }
+    // Pre-load audio saat halaman dimuat
+    audioSpecialSong.src = "shake_it_off.mp3";
+    audioSpecialSong.load();
 
     btnPlaySpecialSong.addEventListener("click", () => {
       // Hentikan melodi synthesizer ultah jika sedang berbunyi
@@ -418,17 +398,27 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (audioSpecialSong.paused) {
-        ensureAudioLoaded(() => {
-          audioSpecialSong.play()
-            .then(() => {
-              btnPlaySpecialSong.classList.add("playing");
-              specialSongIcon.innerHTML = "&#10074;&#10074;";
-              specialSongText.textContent = "Pause Lagu: Shake It Off";
-            })
-            .catch(() => {
-              specialSongText.textContent = "Klik sekali lagi untuk putar";
-            });
-        });
+        // Langsung play di dalam user gesture handler
+        audioSpecialSong.play()
+          .then(() => {
+            btnPlaySpecialSong.classList.add("playing");
+            specialSongIcon.innerHTML = "&#10074;&#10074;";
+            specialSongText.textContent = "Pause Lagu: Shake It Off";
+          })
+          .catch(() => {
+            // Jika gagal, paksa reload src lalu play
+            audioSpecialSong.src = "shake_it_off.mp3";
+            audioSpecialSong.load();
+            audioSpecialSong.play()
+              .then(() => {
+                btnPlaySpecialSong.classList.add("playing");
+                specialSongIcon.innerHTML = "&#10074;&#10074;";
+                specialSongText.textContent = "Pause Lagu: Shake It Off";
+              })
+              .catch(() => {
+                specialSongText.textContent = "Klik sekali lagi untuk putar";
+              });
+          });
       } else {
         audioSpecialSong.pause();
         btnPlaySpecialSong.classList.remove("playing");
